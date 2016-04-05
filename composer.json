@@ -1,0 +1,20 @@
+{
+    "name": "yanivgal/cronom",
+    "description": "Cronjob manager. Manage all your cron jobs without modifying crontab.",
+    "keywords": ["cron","cronjob","cron-job", "crontab", "manager"],
+    "homepage": "http://github.com/yanivgal/Coronom",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yaniv Gal"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "yanivgal\\": "src"
+        }
+    },
+    "require": {
+        "mtdowling/cron-expression": "^1.1"
+    }
+}

@@ -15,6 +15,7 @@
         }
     },
     "require": {
-        "mtdowling/cron-expression": "^1.1"
+        "mtdowling/cron-expression": "^1.1",
+        "jeremeamia/superclosure": "^2.2"
     }
 }

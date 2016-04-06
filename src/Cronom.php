@@ -6,13 +6,75 @@ use yanivgal\Exceptions\CronomException;
 
 class Cronom
 {
+    const KEY_DEBUG = 'debug';
+    const KEY_DEBUG_OUTPUT = 'debugOutput';
+
+    /**
+     * @var string
+     */
+    private $debugOutput;
+
+    /**
+     * @var array
+     */
     private $cronomJobs = [];
 
-    public function __construct()
+    /**
+     * Cronom constructor.
+     * @param array $config
+     */
+    public function __construct(array $config = [])
     {
-        
+        $this->init($config);
     }
 
+    /**
+     * @param array $config
+     */
+    private function init($config)
+    {
+        $debug = false;
+        if (
+            isset($config[self::KEY_DEBUG]) &&
+            is_bool($config[self::KEY_DEBUG])
+        ) {
+            $debug = $config[self::KEY_DEBUG];
+        }
+
+        $this->debugOutput = getcwd() . '/cronom.log';
+        if (
+            isset($config[self::KEY_DEBUG_OUTPUT]) &&
+            is_string($config[self::KEY_DEBUG_OUTPUT])
+        ) {
+            $this->debugOutput = $config[self::KEY_DEBUG_OUTPUT];
+        }
+
+        if ($debug) {
+            fclose(STDIN);
+            fclose(STDOUT);
+            fclose(STDERR);
+
+            global $STDIN;
+            global $STDOUT;
+            global $STDERR;
+
+            $STDIN = fopen('/dev/null', 'r');
+            $STDOUT = fopen($this->debugOutput, 'a');
+            $STDERR = fopen($this->debugOutput, 'a');
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getDebugOutput()
+    {
+        return $this->debugOutput;
+    }
+
+    /**
+     * @param array|CronomJob $job
+     */
     public function add($job)
     {
         if (is_array($job)) {
@@ -22,6 +84,9 @@ class Cronom
         }
     }
 
+    /**
+     * Runs the jobs
+     */
     public function run()
     {
         /* @var CronomJob $cronomJob */
@@ -31,16 +96,11 @@ class Cronom
     }
 
     /**
-     * @param array $jobArray
+     * @param array $jobConfig
      */
-    private function addJobArray($jobArray)
+    private function addJobArray($jobConfig)
     {
-        $this->validateJobArray($jobArray);
-
-        $this->cronomJobs[] = new CronomJob(
-            $jobArray[CronomJob::KEY_EXPRESSION],
-            $jobArray[CronomJob::KEY_JOB]
-        );
+        $this->addCronomJob(new CronomJob($jobConfig));
     }
 
     /**
@@ -49,23 +109,6 @@ class Cronom
     private function addCronomJob(CronomJob $job)
     {
         $this->cronomJobs[] = $job;
-    }
-
-    /**
-     * @param array $jobArray
-     * @throws CronomException
-     */
-    private function validateJobArray($jobArray)
-    {
-        $expressionKey = CronomJob::KEY_EXPRESSION;
-        if (array_key_exists($expressionKey, $jobArray)) {
-            $this->throwException("Job array must contain $expressionKey key");
-        }
-
-        $jobKey = CronomJob::KEY_JOB;
-        if (array_key_exists(CronomJob::KEY_JOB, $jobArray)) {
-            $this->throwException("Job array must contain $jobKey key");
-        }
     }
 
     /**

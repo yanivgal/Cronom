@@ -10,9 +10,6 @@ use yanivgal\Exceptions\CronomJobException;
  * Class CronomJob
  * @package yanivgal
  *
- * @property
- * @property
- * @property
  * @property-read string $expression
  * @property-read callable $job
  * @property-read string $output
@@ -84,12 +81,12 @@ class CronomJob
 
         $this->enabled = true;
         if (
-            isset($config[self::KEY_OUTPUT]) &&
-            is_bool($config[self::KEY_OUTPUT])
+            isset($config[self::KEY_ENABLED]) &&
+            is_bool($config[self::KEY_ENABLED])
         ) {
-            $this->enabled = $config[self::KEY_OUTPUT];
+            $this->enabled = $config[self::KEY_ENABLED];
         }
-
+        
         $this->maxRuntime = 60;
         if (
             isset($config[self::KEY_MAX_RUNTIME]) &&

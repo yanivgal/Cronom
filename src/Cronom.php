@@ -85,13 +85,24 @@ class Cronom
     }
 
     /**
-     * Runs the jobs
+     * Runs the assigned jobs
      */
     public function run()
     {
         /* @var CronomJob $cronomJob */
         foreach ($this->cronomJobs as $cronomJob) {
             $cronomJob->run();
+        }
+    }
+
+    /**
+     * Force run the assigned jobs
+     */
+    public function forceRun()
+    {
+        /* @var CronomJob $cronomJob */
+        foreach ($this->cronomJobs as $cronomJob) {
+            $cronomJob->forceRun();
         }
     }
 

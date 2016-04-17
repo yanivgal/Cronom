@@ -112,6 +112,17 @@ class CronomJob
             $this->runJob();
         }
     }
+
+    /**
+     * Force run the assigned job without checking the scheduled expression
+     * or enabled flag
+     */
+    public function forceRun()
+    {
+        $this->validateJob($this->job);
+
+        $this->runJob();
+    }
     
     private function runJob()
     {
